@@ -24,11 +24,20 @@ async function run() {
         await client.connect();
         // collection in mongodb
         const itemsCollection = client.db('carParts').collection('items');
+        const reviewsCollection = client.db('carParts').collection('reviews');
 
-        // items API
+        // items DB
         app.get('/items', async (req, res) => {
             const query = {};
             const cursor = itemsCollection.find(query);
+            const items = await cursor.toArray();
+            res.send(items);
+        });
+
+        // Reviews DB
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const cursor = reviewsCollection.find(query);
             const items = await cursor.toArray();
             res.send(items);
         });
