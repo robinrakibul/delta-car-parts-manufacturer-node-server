@@ -80,6 +80,14 @@ async function run() {
             const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
             res.send({ result, token });
         });
+
+        // searchId Items
+        app.get('/items/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query={_id: ObjectId(id)};
+            const itemSearch = await itemsCollection.findOne(query);
+            res.send(itemSearch);
+        });
     }
     finally {
 
