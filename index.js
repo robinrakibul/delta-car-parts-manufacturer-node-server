@@ -156,12 +156,13 @@ async function run() {
             res.send({ result, token });
         });
 
-        // search profile  //WORK LEFT
-        app.get('/users/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const userSearch = await userCollection.findOne(query);
-            res.send(userSearch);
+        // profiles app.get
+        app.get('/profile', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const cursor = userCollection.find(query);
+            const myProfile = await cursor.toArray();
+            res.send(myProfile);
         });
 
         // get all orders
