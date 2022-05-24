@@ -105,6 +105,14 @@ async function run() {
             res.send(result);
         })
 
+        // admin email check 
+        app.get('/admin/:email',async(req,res)=>{
+            const email = req.params.email;
+            const user = await userCollection.findOne({email: email});
+            const isAdmin = user.role === 'admin';
+            res.send({admin: isAdmin})
+        })
+
         // searchId Items
         app.get('/items/:id', async (req, res) => {
             const id = req.params.id;
