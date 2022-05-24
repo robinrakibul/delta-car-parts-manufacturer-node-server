@@ -61,7 +61,7 @@ async function run() {
         });
 
         // auth jwt for login
-        app.post('/login', async (req, res) => {
+        app.put('/login', async (req, res) => {
             const user = req.body;
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '7d'
@@ -123,7 +123,7 @@ async function run() {
 
 
         // order adding
-        app.post('/order', async (req, res) => {
+        app.post('/order/:email', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
             res.send(result);
@@ -133,6 +133,20 @@ async function run() {
         app.get('/users', async (req, res) => {
             const users = await userCollection.find().toArray();
             res.send(users);
+        });
+
+        // update profile data
+        app.put('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+            };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
+            res.send({ result, token });
         });
     }
     finally {
