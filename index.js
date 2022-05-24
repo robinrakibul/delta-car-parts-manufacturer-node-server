@@ -106,11 +106,11 @@ async function run() {
         })
 
         // admin email check 
-        app.get('/admin/:email',async(req,res)=>{
+        app.get('/admin/:email', async (req, res) => {
             const email = req.params.email;
-            const user = await userCollection.findOne({email: email});
+            const user = await userCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
-            res.send({admin: isAdmin})
+            res.send({ admin: isAdmin })
         })
 
         // searchId Items
@@ -157,9 +157,9 @@ async function run() {
         });
 
         // search profile  //WORK LEFT
-        app.get('/users/:email', async(req, res) =>{
+        app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
-            const query={email: email};
+            const query = { email: email };
             const userSearch = await userCollection.findOne(query);
             res.send(userSearch);
         });
@@ -168,6 +168,15 @@ async function run() {
         app.get('/allorders', async (req, res) => {
             const orders = await orderCollection.find().toArray();
             res.send(orders);
+        });
+
+        // myitems app.get
+        app.get('/myorders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const cursor = orderCollection.find(query);
+            const myOrders = await cursor.toArray();
+            res.send(myOrders);
         });
     }
     finally {
