@@ -97,6 +97,12 @@ async function run() {
             const result = await orderCollection.insertOne(order);
             res.send(result);
         });
+
+        //get all users
+        app.get('/users', async(req, res) =>{
+            const users = await userCollection.find().toArray();
+            res.send(users);
+        });
     }
     finally {
 
