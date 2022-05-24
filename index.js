@@ -122,7 +122,7 @@ async function run() {
         });
 
 
-        // order adding ISSUE
+        // order adding
         app.post('/order/:email', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
