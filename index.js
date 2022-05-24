@@ -149,12 +149,18 @@ async function run() {
             res.send({ result, token });
         });
 
-        // search profile 
+        // search profile  //WORK LEFT
         app.get('/users/:email', async(req, res) =>{
             const email = req.params.email;
             const query={email: email};
             const userSearch = await userCollection.findOne(query);
             res.send(userSearch);
+        });
+
+        // get all orders
+        app.get('/allorders', async (req, res) => {
+            const orders = await orderCollection.find().toArray();
+            res.send(orders);
         });
     }
     finally {
