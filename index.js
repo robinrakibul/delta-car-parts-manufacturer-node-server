@@ -148,6 +148,14 @@ async function run() {
             const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
             res.send({ result, token });
         });
+
+        // search profile 
+        app.get('/users/:email', async(req, res) =>{
+            const email = req.params.email;
+            const query={email: email};
+            const userSearch = await userCollection.findOne(query);
+            res.send(userSearch);
+        });
     }
     finally {
 
