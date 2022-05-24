@@ -82,6 +82,17 @@ async function run() {
             res.send({ result, token });
         });
 
+        // For giving admin role
+        app.put('/user/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const updateDoc = {
+              $set: { role: 'admin' },
+            };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+          })
+
         // searchId Items
         app.get('/items/:id', async(req, res) =>{
             const id = req.params.id;
