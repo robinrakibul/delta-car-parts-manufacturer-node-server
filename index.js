@@ -44,6 +44,7 @@ async function run() {
         const reviewsCollection = client.db('carParts').collection('reviews');
         const userCollection = client.db('carParts').collection('users');
         const orderCollection = client.db('carParts').collection('order');
+        const paymentCollection = client.db('carParts').collection('payments');
 
         // items DB
         app.get('/items', async (req, res) => {
@@ -191,8 +192,8 @@ async function run() {
 
         // STRIPE PAYMENT
         app.post('/create-payment-intent', async(req, res) =>{
-            const myorder = req.body;
-            const price = myorder.price;
+            const order = req.body;
+            const price = order.totalCost;
             const amount = price*100;
             const paymentIntent = await stripe.paymentIntents.create({
               amount : amount,
@@ -201,6 +202,22 @@ async function run() {
             });
             res.send({clientSecret: paymentIntent.client_secret})
           });
+
+        // store payment data to db
+        app.patch('/myorders/:id',async(req,res)=>{
+            const id = req.params.id;
+            const payment = req.body;
+            const filter = {_id: ObjectId(id)};
+            const updateNewDoc = {
+                $set: {
+                    paid: true,
+                    transactionId: payment.transactionId,
+                }
+            }
+            const updateData =await orderCollection.updateOne(filter, updateNewDoc);
+            const result = await paymentCollection.insertOne(payment);
+            res.send(updateData);
+        })
 
     }
     finally {
