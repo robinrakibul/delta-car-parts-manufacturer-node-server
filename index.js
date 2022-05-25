@@ -174,6 +174,20 @@ async function run() {
             res.send(orders);
         });
 
+        // insert status to orders
+        app.patch('/allorders/:id',async(req,res)=>{
+            const id = req.params.id;
+            const order = req.body;
+            const filter = {_id: ObjectId(id)};
+            const updateOrderStatus = {
+                $set: {
+                    status: true,
+                }
+            }
+            const patchData =await orderCollection.updateOne(filter, updateOrderStatus);
+            res.send(patchData);
+        })
+
         // myOrders app.get email find
         app.get('/myorders', async (req, res) => {
             const email = req.query.email;
@@ -227,7 +241,7 @@ async function run() {
             const result = await orderCollection.deleteOne(query);
             res.send(result);
         })
-        
+
         // deletion of an item in items
         app.delete('/items/:id', async(req,res)=>{
             const id = req.params.id;
