@@ -54,6 +54,7 @@ async function run() {
             res.send(items);
         });
 
+
         // Reviews DB
         app.get('/reviews', async (req, res) => {
             const query = {};
@@ -219,11 +220,19 @@ async function run() {
             res.send(updateData);
         })
 
-        // deletion
+        // deletion from my orders
         app.delete('/myorders/:id', async(req,res)=>{
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await orderCollection.deleteOne(query);
+            res.send(result);
+        })
+        
+        // deletion of an item in items
+        app.delete('/items/:id', async(req,res)=>{
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await itemsCollection.deleteOne(query);
             res.send(result);
         })
     }
