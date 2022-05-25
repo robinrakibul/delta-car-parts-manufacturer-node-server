@@ -173,7 +173,7 @@ async function run() {
             res.send(orders);
         });
 
-        // myOrders app.get
+        // myOrders app.get email find
         app.get('/myorders', async (req, res) => {
             const email = req.query.email;
             const query = { email: email }
@@ -219,6 +219,13 @@ async function run() {
             res.send(updateData);
         })
 
+        // deletion
+        app.delete('/myorders/:id', async(req,res)=>{
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query);
+            res.send(result);
+        })
     }
     finally {
 
